@@ -7,6 +7,11 @@ function bigtreeOpen(e) {
 
     // Once a node is opened once, mark it
     node.openedBefore = true;
+    var isDir = node.path.match(/.*\.D\d+$/);
+    if (isDir) {
+	$(e.node.element).children('div').find('.jqtree-title').prev('i').remove()
+	$(e.node.element).children('div').find('.jqtree-title').before('<i class="icon-folder-open">');
+    }
 
     for (var i=0;i<node.children.length;i++)
     {
@@ -37,19 +42,42 @@ function bigtreeOpen(e) {
     }
 }
 
+function bigtreeClose(e) {
+    //console.log(e.node);
+    var isDir = e.node.path.match(/.*\.D\d+$/);
+    if (isDir) {
+	$(e.node.element).children('div').find('.jqtree-title').prev('i').remove()
+	$(e.node.element).children('div').find('.jqtree-title').before('<i class="icon-folder-close">');
+    }
+}
+
 function init(){
     var url = "http://bigtree.projfinder.com/api/bigtree?root=D0&depth=3"
     url = url + "&callback=?";
     $.getJSON(url, function(databack) {
 	// First just 2 levels
 	$('#tree').tree({
-	    data: databack.data
+	    data: databack.data,
+	    onCreateLi: function(node, $li) {
+		// Add 'icon' span before title
+		var isDir = node.path.match(/.*\.D\d+$/);
+		if (isDir) {
+		    $li.find('.jqtree-title').before('<i class="icon-folder-close">');
+		} else {
+		    $li.find('.jqtree-title').before('<i class="icon-file">');
+		}
+	    }
 	});
     });
 
     $('#tree').bind(
 	'tree.open',
 	bigtreeOpen
+    );
+
+    $('#tree').bind(
+    	'tree.close',
+    	bigtreeClose
     );
 
     // Hook up to the button to query
