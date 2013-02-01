@@ -6,26 +6,29 @@ function bigtreeOpen(e) {
     var node = e.node;
     for (var i=0;i<node.children.length;i++)
     {
-	var url = "http://bigtree.projfinder.com/api/bigtree?root="+e.node.children[i].path+"&depth=3"
-	url = url + "&callback=?";
-	//$.getJSON(url, function(databack) {
-	//	$('#tree').tree('loadData', databack.data);
-	//});
-	$.getJSON(url,(function(thisnode) {
-	    return function(databack) {
-		var ids = Array();
-		for (var ii=0;ii<thisnode.children.length;ii++)
-		{
-		    ids.push(thisnode.children[ii].id)
-		}
-		for (var iii=0;iii<ids.length;iii++)
-		{
-		    $('#tree').tree('removeNode', $('#tree').tree('getNodeById', ids[iii]));
-		}
-		$('#tree').tree('loadData', databack.data, thisnode);
-		1+1;
-	    };
-	}(node.children[i]))); // calling the function with the current value
+	// Only fetch new data for directories... not layers
+	if (e.node.children[i].path.match(/.*\.D\d+$/)) {
+	    var url = "http://bigtree.projfinder.com/api/bigtree?root="+e.node.children[i].path+"&depth=3"
+	    url = url + "&callback=?";
+	    //$.getJSON(url, function(databack) {
+	    //	$('#tree').tree('loadData', databack.data);
+	    //});
+	    $.getJSON(url,(function(thisnode) {
+		return function(databack) {
+		    var ids = Array();
+		    for (var ii=0;ii<thisnode.children.length;ii++)
+		    {
+			ids.push(thisnode.children[ii].id)
+		    }
+		    for (var iii=0;iii<ids.length;iii++)
+		    {
+			$('#tree').tree('removeNode', $('#tree').tree('getNodeById', ids[iii]));
+		    }
+		    $('#tree').tree('loadData', databack.data, thisnode);
+		    1+1;
+		};
+	    }(node.children[i]))); // calling the function with the current value
+	}
     }
 }
 
