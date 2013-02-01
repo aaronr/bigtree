@@ -1,0 +1,22 @@
+CREATE TABLE dir2 (id serial, path ltree, name text);
+
+INSERT INTO dir2 VALUES (default,'D0','root');
+INSERT INTO dir2 VALUES (default,'D0.D1','Imagery');
+INSERT INTO dir2 VALUES (default,'D0.D1.D4','SRTM');
+INSERT INTO dir2 VALUES (default,'D0.D1.D4.L1','srtm_layer1');
+INSERT INTO dir2 VALUES (default,'D0.D1.D4.L2','srtm_layer2');
+INSERT INTO dir2 VALUES (default,'D0.D2','NAIP');
+INSERT INTO dir2 VALUES (default,'D0.D2.L3','naip_2009');
+INSERT INTO dir2 VALUES (default,'D0.D3','NOAA Aerial');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5','May 2010');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5.L11','tilecache layer');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5.D6','Week 1');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5.D6.L4','Day1');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5.D6.L5','Day2');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5.D6.L6','Day3');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5.D6.L7','Day4');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5.D6.L8','Day5');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5.D6.L9','Day6');
+INSERT INTO dir2 VALUES (default,'D0.D3.D5.D6.L10','Day7');
+CREATE INDEX dir2_gist_idx ON dir2 USING gist(path);
+CREATE INDEX dir2_idx ON dir2 USING btree(path);
