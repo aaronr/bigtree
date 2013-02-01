@@ -4,10 +4,15 @@ function bigtreeOpen(e) {
     // Loop through all the children, and if they are directories
     // we should refresh them 3 deep
     var node = e.node;
+
+    // Once a node is opened once, mark it
+    node.openedBefore = true;
+
     for (var i=0;i<node.children.length;i++)
     {
 	// Only fetch new data for directories... not layers
-	if (e.node.children[i].path.match(/.*\.D\d+$/)) {
+	// Also weed out anything that has been opened before... no need to fetch again
+	if (e.node.children[i].path.match(/.*\.D\d+$/) && !e.node.children[i].openedBefore) {
 	    var url = "http://bigtree.projfinder.com/api/bigtree?root="+e.node.children[i].path+"&depth=3"
 	    url = url + "&callback=?";
 	    //$.getJSON(url, function(databack) {
