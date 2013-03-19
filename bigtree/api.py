@@ -2,25 +2,34 @@ from flask import abort, request, render_template, jsonify
 import psycopg2
 import sys
 import os
+import re
 import json
 from utils.jsonp import jsonp
+import random
 
 def api_landing():
     return redirect(url_for('bigtree'))
 
 def build_tree(cursor,root, depth):
     if depth == 1:
-        sql = "select * from dir2 where path ~ '%s.*{1}'" % (root)                    
+        sql = "select * from toc1 where path ~ '%s.*{1}'" % (root)                    
         cursor.execute(sql)
         results = cursor.fetchall()
         btresponse = []
         for i,row in enumerate(results):
-            btresponse.append({'label':row[2],'id':row[0],'path':row[1],'children':[]})
+            children = []
+            if re.match(r".*\.D\d+$",row[1]):
+                # We have a directory so put a placeholder in for children
+                # so the UI will know to make it a folder... even though there are 
+                # no populated children yet
+                fakepath = row[1]+".D0"
+                children.append({'label':'placeholder','id':random.randint(9999,999999),'path':fakepath,'children':[]})
+            btresponse.append({'label':row[2],'id':row[0],'path':row[1],'children':children})
         return btresponse
     else:
         # find the roots children
         # loop through and build the sub-trees
-        sql = "select * from dir2 where path ~ '%s.*{1}'" % (root)                    
+        sql = "select * from toc1 where path ~ '%s.*{1}'" % (root)                    
         cursor.execute(sql)
         results = cursor.fetchall()
         btresponse = []

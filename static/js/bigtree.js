@@ -18,7 +18,7 @@ function bigtreeOpen(e) {
 	// Only fetch new data for directories... not layers
 	// Also weed out anything that has been opened before... no need to fetch again
 	if (e.node.children[i].path.match(/.*\.D\d+$/) && !e.node.children[i].openedBefore) {
-	    var url = "http://bigtree.projfinder.com/api/bigtree?root="+e.node.children[i].path+"&depth=3"
+	    var url = "http://bigtree.projfinder.com/api/bigtree?root="+e.node.children[i].path+"&depth=2"
 	    url = url + "&callback=?";
 	    //$.getJSON(url, function(databack) {
 	    //	$('#tree').tree('loadData', databack.data);
@@ -52,7 +52,7 @@ function bigtreeClose(e) {
 }
 
 function init(){
-    var url = "http://bigtree.projfinder.com/api/bigtree?root=D0&depth=3"
+    var url = "http://bigtree.projfinder.com/api/bigtree?root=D0&depth=2"
     url = url + "&callback=?";
     $.getJSON(url, function(databack) {
 	// First just 2 levels
